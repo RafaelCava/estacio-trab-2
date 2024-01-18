@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <script src="./ordenando.js"></script>
+</head>
+<body>
+  <main class="container w-50">
+    <h1>Ordenando Valores</h1>
+    <div class="form-group">
+      <label for="valor">Valor</label>
+      <input class="form-control mb-2" type="number" id="valor">
+      <button class="btn btn-primary" onclick="add()">Adicionar</button>
+    </div>
+    <hr />
+    <div class="form-group">
+      <select class="form-control mb-2" name="sortStrategy" id="sortStrategy">
+        <option value="bubble_sort">Bubble Sort</option>
+        <option value="selection_sort">Selection Sort</option>
+        <option value="quick_sort">Quick Sort</option>
+      </select>
+      <button class="btn btn-primary" onclick="ordenar()">Ordenar</button>
+      <button class="btn btn-primary" onclick="misturar()">Misturar</button>
+    </div>
+    <hr />
+    <ul id="valores"/>
+  </main>
+
+  <script>
+    const valores = document.getElementById('valores');
+    const sortStrategy = document.getElementById('sortStrategy');
+    const ordenar = () => {
+      const strategy = sortStrategy.value;
+      const values = Array.from(valores.children).map(item => {
+        if(item.tagName === 'LI') {
+          return parseInt(item.innerText);
+        }
+      }).filter(item => item !== undefined);
+      const sortStrategies = {
+        bubble_sort: (values) => bubbleSort(values),
+        selection_sort: (values) => selectionSort(values),
+        quick_sort: (values) => quickSort(values)
+      }
+      const ordenados = sortStrategies[strategy](values);
+      valores.innerHTML = '';
+      ordenados.forEach(valor => {
+        const li = document.createElement('li');
+        li.innerText = valor;
+        valores.appendChild(li);
+      });
+    }
+    const misturar = () => {
+      const values = Array.from(valores.children).map(item => {
+        if(item.tagName === 'LI') {
+          return parseInt(item.innerText);
+        }
+      }).filter(item => item !== undefined);
+      const misturados = shuffle(values, 2);
+      valores.innerHTML = '';
+      misturados.forEach(valor => {
+        const li = document.createElement('li');
+        li.innerText = valor;
+        valores.appendChild(li);
+      });
+    }
+    const add = () => {
+      const valor = document.getElementById('valor').value;
+      const li = document.createElement('li');
+      li.innerText = valor;
+      valores.appendChild(li);
+    }
+  </script>
+</body>
+</html>
